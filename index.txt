@@ -1,0 +1,89 @@
+
+function reducerAddSub(state = 0, action){
+    switch(action.type){
+        case 'deposit':
+            return state + action.payload
+        case 'withdraw':
+            return state + action.payload
+        default:
+            return state
+    }
+}
+
+const store = window.store = Redux.createStore(reducerAddSub) 
+console.log(store);
+
+document.getElementById('deposit').addEventListener('click', () => {
+    store.dispatch({
+        type: 'deposit',
+        payload: 10
+    })
+})
+
+function render(){
+    var value = document.getElementById('money')
+    value.innerHTML = store.getState();
+}
+store.subscribe(render)
+
+-----------------------------------------------------------------------------
+
+const initState = {
+    students : []
+}
+
+function reducer(state = initState, action){
+    switch(action.type){
+        case 'ADD':
+            return {
+                ...state,
+                students: [...state.students, action.payload] //...state là add thêm phần tử, tạo thêm giá trị mới dựa trên toàn bộ giá trị có sẵn
+            }
+        case 'SUBTRACT':
+            return {
+                ...state,
+                students: [...state.students, action.payload]
+            }
+        default:
+            return state;
+    }
+}
+
+const store= window.store = Redux.createStore(reducer)
+
+
+const render = () => {
+    const state = store.getState();
+    const studentList = document.getElementById('studentList');
+    studentList.innerHTML = '';
+    state.students.forEach(function(student)  { //student lập mỗi phần tử cho student làm tham số của các giá trị trong mảng
+        const li = document.createElement('li');
+        li.textContent = student;
+        studentList.appendChild(li);
+    });
+};
+
+store.subscribe(render)
+
+document.getElementById('btnAdd').addEventListener('click', (name) => {
+    name.preventDefault()
+    const studentName = document.getElementById('inpStd').value
+    if(studentName){
+        store.dispatch({
+            type: 'ADD',
+            payload: studentName
+        })
+    }
+    document.getElementById('inpStd').value = ''
+})
+
+document.getElementById('btnDelete').addEventListener('click', () => {
+    const studentName = document.getElementById('studentList').value
+    if(studentName){
+        store.dispatch({
+            type: 'SUBTRACT',
+            payload: []
+        })
+    }
+    document.getElementById('inpStd').value = ''
+})
